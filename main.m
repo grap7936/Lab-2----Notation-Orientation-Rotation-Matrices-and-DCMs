@@ -27,11 +27,13 @@ close all
 % Create data set and then read in .csv file information 
 filename = readmatrix("Lab2Data1.csv");
 
+% Define initial target and drone position in the inertial frame as given by the .csv
 pos_av_N =  filename(:,11:13).' ./1000; 
 att_av_N = filename(:,8:10).' ./1000;
 pos_tar_N = filename(:,5:7).' ./1000;
 att_tar_N = filename(:,2:4).' ./1000;
 
+% Apply function to convert into data in the E frame
 [t_vec, av_pos_inert, av_att, tar_pos_inert, tar_att] = LoadASPENData(filename);
 
 %% Calling DCM 1 (3-2-1) using Function 2
@@ -86,7 +88,7 @@ y_pos_tar_E = tar_pos_inert(2,:);
 z_pos_tar_E = tar_pos_inert(3,:);
 
 
-
+% Plot position in X, Y, Z of the target in the E-frame (after converting with convertASPENData)
 figure();
 subplot(3,1,1)
 plot(t_vec, x_pos_drone_E, "b", "LineWidth",1.5)
@@ -102,6 +104,7 @@ hold on
 plot(t_vec, z_pos_tar_E, "r--", "LineWidth",1.5)
 
 
+% Convert 321 attitude to degrees and assign to each vector component to graph
 attitude321_deg = rad2deg(attitude321);
 phi = zeros(1,length(attitude321_deg));
 theta = phi;
@@ -112,6 +115,7 @@ theta(1,i) = attitude321_deg(2,1,i);
 psi(1,i) = attitude321_deg(3,1,i);
 end
 
+% Graph changing euler angle values with time
 figure();
 subplot(3,1,1)
 plot(t_vec, phi,"b", "LineWidth",1.5)
