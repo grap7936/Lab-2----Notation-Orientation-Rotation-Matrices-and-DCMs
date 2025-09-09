@@ -1,0 +1,14 @@
+function [DCM] = RotationMatrix313(attitude313)
+
+phi = attitude313(1);
+theta = attitude313(2);
+psi = attitude313(3);
+
+R3 = [cos(phi) sin(phi) 0; -sin(phi) cos(phi) 0; 0 0 1];
+R1 = [1 0 0; 0 cos(theta) sin(theta); 0 -sin(theta) cos(theta)];
+R3_2 = [cos(psi) sin(psi) 0; -sin(psi) cos(psi) 0; 0 0 1];
+
+DCM = R3*R1*R3_2;
+
+end
+
