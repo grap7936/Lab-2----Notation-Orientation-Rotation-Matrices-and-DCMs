@@ -4,16 +4,6 @@ Course: ASEN 3801 -- Aero Vehicle Dynamics and Controls Lab 2:  Notation, Orient
 Matrices and DCMs
 Goal: Complete Applications Regarding Dynamical Systems
 
-Application 1 -- 
-Inputs: TBD
-Outputs: TBD
-Purpose:
-
-Application 2 -- 
-Inputs: TBD
-Outputs: TBD
-Purpose:
-
 %}
 
 %% Housekeeping 
@@ -28,7 +18,8 @@ close all
 filename = readmatrix("Lab2Data1.csv");
 filename(any(isnan(filename), 2), :) = [];
 
-% Define initial target and drone position in the inertial frame as given by the .csv
+% Define initial target and drone position in the inertial frame as given
+% by the .csv and converting to meters from millimeters
 pos_av_N =  filename(:,11:13).' ./1000; 
 att_av_N = filename(:,8:10).' ./1000;
 pos_tar_N = filename(:,5:7).' ./1000;
@@ -36,6 +27,13 @@ att_tar_N = filename(:,2:4).' ./1000;
 
 % Apply function to convert into data in the E frame
 [t_vec, av_pos_inert, av_att, tar_pos_inert, tar_att] = LoadASPENData(filename);
+
+% Converting to meters from millimeters
+av_pos_inert = av_pos_inert ./1000;
+tar_pos_inert = tar_pos_inert ./1000;
+
+% Converting to seconds from milliseconds
+t_vec = t_vec ./1000;
 
 %% Calling DCM 1 (3-2-1) using Function 2
 
@@ -70,6 +68,7 @@ y_pos_tar = pos_tar_N(2,:);
 z_pos_tar = pos_tar_N(3,:);
 
 
+% Creating a 3D figure for the inertial vehickle path in N frame
 figure();
 plot3(x_pos_drone, y_pos_drone, z_pos_drone, "b", 'LineWidth', 1.5)
 hold on;
@@ -96,6 +95,7 @@ z_pos_tar_E = tar_pos_inert(3,:);
 % Plot position in X,Y,Z of the target in the E-frame (after converting with convertASPENData)
 figure();
 
+% Plotting x
 subplot(3,1,1)
 plot(t_vec, x_pos_drone_E, "b", "LineWidth",1.5)
 hold on 
@@ -105,7 +105,7 @@ ylabel('X position [m]')
 title('Position in X of the Drone and Target in E Frame')
 legend('Position X of Drone in E Frame', 'Position X of Target in E Frame', 'Location', 'best')
 
-
+% Plotting y
 subplot(3,1,2)
 plot(t_vec, y_pos_drone_E, "b", "LineWidth",1.5)
 hold on 
@@ -115,6 +115,7 @@ ylabel('Y position [m]')
 title('Position in Y of the Drone and Target in E Frame')
 legend('Position Y of Drone in E Frame', 'Position Y of Target in E Frame', 'Location', 'best')
 
+% Plotting z
 subplot(3,1,3)
 plot(t_vec, z_pos_drone_E, "b", "LineWidth",1.5)
 hold on 
@@ -124,7 +125,8 @@ ylabel('Z position [m]')
 title('Position in Z of the Drone and Target in E Frame')
 legend('Position Z of Drone in E Frame', 'Position Z of Target in E Frame', 'Location', 'best')
 
-% Convert 321 attitude to degrees and assign to each vector component to graph
+% Convert 321 attitude to degrees and assign to each vector component for
+% drone
 attitude321_deg = rad2deg(attitude321_Vehicle);
 phi = zeros(1,length(attitude321_deg));
 theta = phi;
@@ -135,6 +137,8 @@ theta(1,i) = attitude321_deg(2,1,i);
 psi(1,i) = attitude321_deg(3,1,i);
 end
 
+% Convert 321 attitude to degrees and assign to each vector component for
+% target
 attitude321_deg2 = rad2deg(attitude321_Target);
 phi2 = zeros(1,length(attitude321_deg2));
 theta2 = phi2;
@@ -148,6 +152,7 @@ end
 % Graph changing euler angle values with time
 figure();
 
+% Plotting phi
 subplot(3,1,1)
 plot(t_vec, phi,"b", "LineWidth",1.5)
 hold on 
@@ -157,6 +162,7 @@ ylabel('Phi [degrees]')
 title('Changing Euler Angle Phi (321) Over Time')
 legend('Phi of Drone in E Frame', 'Phi of Target in E Frame', 'Location', 'best')
 
+% Plotting theta
 subplot(3,1,2)
 plot(t_vec, theta,"b","LineWidth",1.5)
 hold on 
@@ -166,6 +172,7 @@ ylabel('Theta [degrees]')
 title('Changing Euler Angle (321) Theta Over Time')
 legend('Theta of Drone in E Frame', 'Theta of Target in E Frame', 'Location', 'best')
 
+% Plotting psi
 subplot(3,1,3)
 plot(t_vec, psi,"b","LineWidth",1.5)
 hold on 
@@ -179,7 +186,8 @@ legend('Psi of Drone in E Frame', 'Psi of Target in E Frame', 'Location', 'best'
 
 %% Question 5
 
-% Convert 313 attitude to degrees and assign to each vector component to graph
+% Convert 313 attitude to degrees and assign to each vector component for
+% drone
 attitude313_deg3 = rad2deg(attitude313_Vehicle);
 phi3 = zeros(1,length(attitude313_deg3));
 theta3 = phi3;
@@ -190,7 +198,8 @@ theta3(1,i) = attitude313_deg3(2,1,i);
 psi3(1,i) = attitude313_deg3(3,1,i);
 end
 
-% Convert 313 attitude to degrees and assign to each vector component to graph
+% Convert 313 attitude to degrees and assign to each vector component for
+% target
 attitude313_deg4 = rad2deg(attitude313_Target);
 phi4 = zeros(1,length(attitude313_deg4));
 theta4 = phi4;
@@ -204,6 +213,7 @@ end
 % Graph changing euler angle values with time
 figure();
 
+% Plotting phi
 subplot(3,1,1)
 plot(t_vec, phi3,"b", "LineWidth",1.5)
 hold on 
@@ -211,7 +221,9 @@ plot(t_vec, phi4,"r--", "LineWidth",1.5)
 xlabel('Time')
 ylabel('Phi [degrees]')
 title('Changing Euler Angle (313) Phi Over Time')
+legend('Phi of Drone in B Frame', 'Phi of Target in B Frame', 'Location', 'best')
 
+% Plotting theta
 subplot(3,1,2)
 plot(t_vec, theta3,"b","LineWidth",1.5)
 hold on 
@@ -219,7 +231,9 @@ plot(t_vec, theta4,"r--", "LineWidth",1.5)
 xlabel('Time')
 ylabel('Theta [degrees]')
 title('Changing Euler Angle (313) Theta Over Time')
+legend('Theta of Drone in B Frame', 'Theta of Target in B Frame', 'Location', 'best')
 
+% Plotting psi
 subplot(3,1,3)
 plot(t_vec, psi3,"b", "LineWidth",1.5)
 hold on 
@@ -227,9 +241,12 @@ plot(t_vec, psi4,"r--", "LineWidth",1.5)
 xlabel('Time')
 ylabel('Psi [degrees]')
 title('Changing Euler Angle (313) Psi Over Time')
+legend('Psi of Drone in B Frame', 'Psi of Target in B Frame', 'Location', 'best')
 
 %% Question 6
 
+% Calculate the position vector of the target relative to the aerospace
+% vehicle, expressed in the E frame
 r_rel_E = tar_pos_inert - av_pos_inert; 
 
 % Extract components for plotting
@@ -237,19 +254,24 @@ x_rel_E = r_rel_E(1,:);
 y_rel_E = r_rel_E(2,:);
 z_rel_E = r_rel_E(3,:);
 
+% Plot relative position vector (Inertial coordinates) as a function of time
 figure();
+
+% Plotting x_rel in E
 subplot(3,1,1)
 plot(t_vec, x_rel_E, "LineWidth", 1.5)
 xlabel('Time [s]')
 ylabel('X_rel [m]')
 title('Relative X Position (Target wrt Vehicle) in Frame E')
 
+% Plotting y_rel in E
 subplot(3,1,2)
 plot(t_vec, y_rel_E, "LineWidth",1.5)
 xlabel('Time [s]')
 ylabel('Y_rel [m]')
 title('Relative Y Position (Target wrt Vehicle) in Frame E')
 
+% Plotting z_rel in E
 subplot(3,1,3)
 plot(t_vec, z_rel_E, "LineWidth",1.5)
 xlabel('Time [s]')
@@ -257,4 +279,40 @@ ylabel('Z_rel [m]')
 title('Relative Z Position (Target wrt Vehicle) in Frame E')
 
 %% Question 7
+
+% Rotating the position vector into body coordinates using DCM321
+r_rel_B = zeros(3,length(t_vec));
+
+for i = 1:length(t_vec)
+    r_rel_B(:,i) = DCM_321_Vehicle(:,:,i) * r_rel_E(:,i);
+end
+
+% Extract components for plotting
+x_rel_B = r_rel_B(1,:);
+y_rel_B = r_rel_B(2,:);
+z_rel_B = r_rel_B(3,:);
+
+% Plot relative position vector (Body coordinates) as a function of time
+figure();
+
+% Plotting x_rel in B
+subplot(3,1,1)
+plot(t_vec, x_rel_B, "LineWidth", 1.5)
+xlabel('Time [s]')
+ylabel('X_rel [m]')
+title('Relative X Position (Target wrt Vehicle) in Frame B')
+
+% Plotting y_rel in B
+subplot(3,1,2)
+plot(t_vec, y_rel_B, "LineWidth",1.5)
+xlabel('Time [s]')
+ylabel('Y_rel [m]')
+title('Relative Y Position (Target wrt Vehicle) in Frame B')
+
+% Plotting z_rel in B
+subplot(3,1,3)
+plot(t_vec, z_rel_B, "LineWidth",1.5)
+xlabel('Time [s]')
+ylabel('Z_rel [m]')
+title('Relative Z Position (Target wrt Vehicle) in Frame B')
 
